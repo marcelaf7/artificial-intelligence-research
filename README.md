@@ -9,6 +9,10 @@ A reinforcement learning AI that plays Jungle Chess
 
 This program requires maven
 
+On first build:
+
+`mvn install`
+
 ### Build and Run
 
 To compile the code:
