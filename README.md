@@ -1,2 +1,3 @@
-# artificial-intelligence-research
-Research Project for Introduction to Artificial Intelligence course
+# Jungle Chess Reinforcement Learning
+
+A reinforcement learning AI that plays Jungle Chess
