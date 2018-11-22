@@ -6,11 +6,9 @@ public class Board {
     private final int HEIGHT = 9;
     private final int WIDTH = 7;
     private Tile[][] board;
-    private HashMap<Location, Tile> board_;
 
     public Board() {
         this.board = new Tile[HEIGHT][WIDTH];
-        this.board_ = new HashMap<>();
         setBoard();
     }
 
@@ -21,15 +19,7 @@ public class Board {
     public void setBoard() {
         for (int row = 0; row < HEIGHT; ++row) {
             for (int col = 0; col < WIDTH; ++col) {
-                //TODO: Old version
                 this.board[row][col] = makeTile(row, col);
-
-                //TODO: New version
-                Location location = new Location(row, col);
-                Piece piece = makePiece(location);
-                Tile tile = makeTile(location);
-                tile.setPiece(piece); //If there is a piece (i.e., (0,0) gets a Lion), set it on the Tile
-                board_.put(location, tile);
             }
         }
     }
@@ -42,14 +32,6 @@ public class Board {
      */
     public Tile getTile(int row, int col) {
         return board[row][col];
-    }
-
-    public Tile getTile_(int row, int col) {
-        return getTile_(new Location(row, col));
-    }
-
-    public Tile getTile_(Location loc) {
-        return board_.get(loc);
     }
 
     /**
@@ -160,91 +142,14 @@ public class Board {
         }
     }
 
-    public Piece makePiece(Location location){
-        //Lion
-        if (location.equals(new Location(0, 0))){
-            return new Lion("red");
-        } else if (location.equals(new Location(8, 6))){
-            return new Lion("blue");
-        }
-
-        //Rat
-        else if (location.equals(new Location(2, 0))){
-            return new Rat("red");
-        } else if (location.equals(new Location(6, 6))){
-            return new Rat("blue");
-        }
-
-        //Dog
-        else if (location.equals(new Location(1, 1))){
-            return new Dog("red");
-        } else if (location.equals(new Location(8, 5))){
-            return new Dog("blue");
-        }
-
-        //Leopard
-        else if (location.equals(new Location(2, 2))){
-            return new Leopard("red");
-        } else if (location.equals(new Location(6, 4))){
-            return new Leopard("blue");
-        }
-
-        //Wolf
-        else if (location.equals(new Location(2, 4))){
-            return new Wolf("red");
-        } else if (location.equals(new Location(6, 2))){
-            return new Wolf("blue");
-        }
-
-        //Cat
-        else if (location.equals(new Location(1, 5))){
-            return new Cat("red");
-        } else if (location.equals(new Location(7, 1))){
-            return new Cat("blue");
-        }
-
-        //Tiger
-        else if (location.equals(new Location(0, 6))){
-            return new Tiger("red");
-        } else if (location.equals(new Location(8, 0))){
-            return new Tiger("blue");
-        }
-
-        //Elephant
-        else if (location.equals(new Location(2, 7))){
-            return new Elephant("red");
-        } else if (location.equals(new Location(6, 0))){
-            return new Elephant("blue");
-        }
-        return null;
-    }
-
-
-    /**
-     * Iterates through each player, then each piece, and
-     * places pieces on the empty temp board
-     *
-     * @param draw the temp board only used to display the current board
-     * @param players both Players in an array
-     */
-    public void placePieces(char[][] draw, Player[] players) {
-        for (Player player : players) {
-            for (Piece piece : player.getValidPieces()) {
-                draw[piece.getRow()][piece.getCol()] = (char) (piece.getRank() + '0');
-            }
-        }
-    }
-
     /**     For crude implementation ONLY
      * Creates a new 2d array of char to render as the output
-     * calls placePieces which places the Pieces on an otherwise empty board
      * then iterates through each char and if there isn't a piece there, retrieve the real board's Tile.
      * After completing construction, it prints the temp board
      * @param players the array of two Players that have Pieces on the real board
      */
     public void printBoard(Player[] players) {
         char[][] draw = new char[HEIGHT][WIDTH];
-        placePieces(draw, players);
 
         for (int row = 0; row < HEIGHT; ++row) {
             for (int col = 0; col < WIDTH; ++col) {
@@ -264,7 +169,6 @@ public class Board {
             }
         }
     }
-
 
     /**
      *  makeTile(Location) helpers
