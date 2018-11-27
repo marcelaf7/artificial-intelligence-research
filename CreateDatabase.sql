@@ -1,0 +1,11 @@
+GRANT ALL ON *.* TO 'ai'@'127.0.0.1' IDENTIFIED BY '123456';
+
+CREATE DATABASE IF NOT EXISTS ReinforcementLearning;
+
+USE ReinforcementLearning;
+
+CREATE TABLE IF NOT EXISTS QTableTest (
+  State VARCHAR(50),
+  Move VARCHAR(20),
+  Q TINYINT
+);
