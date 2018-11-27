@@ -31,20 +31,40 @@ public class QDatabase {
       Statement stmt = con.createStatement();
       ResultSet rs;
 
-      rs = stmt.executeQuery("SELECT move from " + tableName + "WHERE state = " + state);
+      rs = stmt.executeQuery("SELECT Move from " + tableName + "WHERE State = " + state);
 
-      //TODO parse the response
+      String moves = "";
+      while (rs.next()) {
+        if (!moves.equals("")) {
+          moves += ";";
+        }
+        moves = rs.getString("Move");
+      }
+
+      return moves;
 
     } catch (SQLException e) {
-      System.err.println("Error making a query");
+      System.err.println("Error querying the database for moves");
       return null;
     }
-    return null;
   }
 
+  // Returns Q value from database
+  // Return -1 for error or if not in database
   public int getQ(String state, String move) {
-    //TODO implement this
-    return 0;
+    try {
+      Statement stmt = con.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT Q from " + tableName + "WHERE State = " + state + "AND Move = " + move);
+
+      if (rs.next()) {
+        return rs.getInt("Q");
+      }
+    } catch (Exception e) {
+      System.err.println("Error querying the database for Q");
+      return -1;
+    }
+
+    return -1;
   }
 
   public boolean setQ(String state, String move) {
