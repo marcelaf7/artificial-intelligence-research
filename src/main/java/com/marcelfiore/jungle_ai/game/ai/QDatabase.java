@@ -23,6 +23,7 @@ public class QDatabase {
       System.exit(1);
     } catch (SQLException e) {
       System.err.println("Error establishing connection to database");
+      System.exit(1);
     }
   }
 
@@ -31,9 +32,10 @@ public class QDatabase {
       Statement stmt = con.createStatement();
       ResultSet rs;
 
-      rs = stmt.executeQuery("SELECT Move from " + tableName + "WHERE State = " + state);
+      rs = stmt.executeQuery("SELECT Move from " + tableName + " WHERE State = '" + state + "';");
 
       String moves = "";
+      // TODO this query is only returning one move
       while (rs.next()) {
         if (!moves.equals("")) {
           moves += ";";
@@ -45,37 +47,69 @@ public class QDatabase {
 
     } catch (SQLException e) {
       System.err.println("Error querying the database for moves");
+      e.printStackTrace();
       return null;
     }
   }
 
   // Returns Q value from database
   // Return -1 for error or if not in database
-  public int getQ(String state, String move) {
+  public float getQ(String state, String move) {
     try {
       Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT Q from " + tableName + "WHERE State = " + state + "AND Move = " + move);
+      ResultSet rs = stmt.executeQuery("SELECT Q from " + tableName + " WHERE State = '" + state + "' AND Move = '" + move + "';");
 
       if (rs.next()) {
-        return rs.getInt("Q");
+        return rs.getFloat("Q");
       }
     } catch (Exception e) {
       System.err.println("Error querying the database for Q");
+      e.printStackTrace();
       return -1;
     }
 
     return -1;
   }
 
-  public boolean setQ(String state, String move) {
-    //TODO implement this
-    return false;
+  public boolean setQ(String state, String move, double Q) {
+    try {
+      Statement stmt = con.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT Q from " + tableName + " WHERE State = '" + state + "' AND Move = '" + move + "';");
+
+      int rowCount;
+      if (rs.next()) {
+        rowCount = stmt.executeUpdate("UPDATE " + tableName + " SET Q= " + Q + " WHERE State = '" + state + "' AND Move = '" + move + "';");
+      } else {
+        rowCount = stmt.executeUpdate("INSERT INTO " + tableName + " values ('" + state + "', '" + move + "', '" + Q + "');");
+      }
+
+      if (rowCount == 0) {
+        System.err.println("Error setting Q in the database.");
+        return false;
+      } else {
+        return true;
+      }
+
+    } catch (SQLException e) {
+      System.err.println("Error setting Q in the database. Do you have the right permissions?");
+      e.printStackTrace();
+      return false;
+    }
   }
 
   //This method should only be used for testing and would never be used otherwise.
   public static void main(String[] args) {
-    new QDatabase();
-    System.out.println("Everything ran with no exceptions thrown");
+    QDatabase qd = new QDatabase();
+    System.out.println("Adding state = state1, move = move1, Q = 0.354");
+    qd.setQ("state1", "move1", 0.354);
+    System.out.println("Adding state = state1, move = move2, Q = 0.354");
+    qd.setQ("state1", "move2", 0.356);
+    System.out.println("Changing Q value for state1 and move2 to 0.576");
+    qd.setQ("state1", "move2", 0.576);
+
+    System.out.println("Moves for state1 are: " + qd.getMoves("state1"));
+    System.out.println("Q for state1 and move1 is: " + qd.getQ("state1", "move1"));
+    System.out.println("Q for state1 and move2 is: " + qd.getQ("state1", "move2"));
   }
 
 
