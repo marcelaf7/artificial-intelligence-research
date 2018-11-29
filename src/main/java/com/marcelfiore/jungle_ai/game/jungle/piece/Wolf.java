@@ -1,6 +1,6 @@
-package com.marcelfiore.jungle_ai.game.jungle;
+package com.marcelfiore.jungle_ai.game.jungle.piece;
 
-public class Wolf extends Piece {
+public class Wolf extends GenericPiece {
     public Wolf(String color) {
         super("Wolf", 3, color);
         if (color.equals("red")) {

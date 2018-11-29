@@ -1,15 +1,19 @@
-package com.marcelfiore.jungle_ai.game.jungle;
+package com.marcelfiore.jungle_ai.game.jungle.tile;
 
 public class Trap extends Tile {
-
     private String color;
 
+    /**
+     * Create a Trap object with a color.
+     * @param color describes which team's den this is: red or blue.
+     */
     public Trap(String color) {
         super('T');
         this.color = color;
     }
-    public Trap() {
-        super('T');
+
+    public String getColor(){
+        return color;
     }
 
     @Override

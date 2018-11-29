@@ -1,6 +1,6 @@
-package com.marcelfiore.jungle_ai.game.jungle;
+package com.marcelfiore.jungle_ai.game.jungle.piece;
 
-public class Lion extends Piece {
+public class Lion extends JumperPiece {
     public Lion(String color) {
         super("Lion", 7, color);
         if (color.equals("red")) {

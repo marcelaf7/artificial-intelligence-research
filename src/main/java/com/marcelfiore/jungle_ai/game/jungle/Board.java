@@ -1,134 +1,67 @@
 package com.marcelfiore.jungle_ai.game.jungle;
 
+import com.marcelfiore.jungle_ai.game.jungle.piece.*;
+import com.marcelfiore.jungle_ai.game.jungle.tile.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
-
+/**
+ * Board class is responsible for board-specific behavior and state. This includes:
+ * 1. Knowing about every Tile on the board.
+ * 2. Knowing about every Piece on the board, moving the pieces, and removing the pieces.
+ * TODO: Move this to TileFactory.java 3. Creating Tiles based on location.
+ * TODO: Move this to PieceFactory.java 4. Creating Pieces based on location.
+ */
 public class Board {
-    private final int HEIGHT = 9;
-    private final int WIDTH = 7;
-    private Tile[][] board;
+    private HashMap<Location, Tile> board;
 
+    /**
+     * Set up a new Board object for a new Game.
+     */
     public Board() {
-        this.board = new Tile[HEIGHT][WIDTH];
+        this.board = new HashMap<>();
         setBoard();
     }
 
     /**
-     * Iterates through each row, then each column, and
-     * instantiates each Tile (subtype) based off the location
+     * Set up the board:
+     * 1. Make a new tile based on each Location, out of 63.
+     * 2. Make a new piece and place it on the tiles that start with a piece.
      */
-    public void setBoard() {
+    private void setBoard() {
+        int HEIGHT = 9;
+        int WIDTH = 7;
         for (int row = 0; row < HEIGHT; ++row) {
             for (int col = 0; col < WIDTH; ++col) {
-                this.board[row][col] = makeTile(row, col);
+                Location location = new Location(row, col);
+                Piece piece = makePiece(location);
+                Tile tile = makeTile(location);
+                tile.setPiece(piece); //If there is a piece (i.e., (0,0) gets a Lion), set it on the Tile
+                board.put(location, tile);
             }
         }
     }
 
     /**
-     * Returns a tile on the board
-     * @param row horizontal location on board
-     * @param col vertical location on board
-     * @return requested tile
+     * Create a specific type of Tile (Den, Trap, etc...) based on location.
+     * @param location the coordinate of the Tile in the context of the board. Used to determine what type of Tile.
+     * @return a specific Tile based on location.
      */
-    public Tile getTile(int row, int col) {
-        return board[row][col];
-    }
-
-    /**
-     * If the Tile at (row, col) is suppose to be a River Tile
-     * @param row horizontal location on board
-     * @param col vertical location on board
-     * @return true if it's suppose to be a River Tile. false if not
-     */
-    public boolean isDen(int row, int col) {
-        return ((row == 0 || row == 8) && col == 3);
-    }
-
-    /**
-     * If the Tile at (row, col) is suppose to be a Trap Tile
-     * @param row horizontal location on board
-     * @param col vertical location on board
-     * @return true if it's suppose to be a Trap Tile. false if not
-     */
-    public boolean isTrap(int row, int col) {
-        // if there is a Den below, above, to right or to left
-        if (isDen(row + 1, col) || isDen(row - 1, col)
-                || isDen(row, col + 1) || isDen(row, col - 1)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * If the Tile at (row, col) is suppose to be a River Tile
-     * @param row horizontal location on board
-     * @param col vertical location on board
-     * @return true if it's suppose to be a River Tile. false if not
-     */
-    public boolean isRiver(int row, int col) {
-        return ((row >= 3 && row <= 5) && (col == 1 || col == 2 || col == 4 || col == 5));
-    }
-
-    /**
-     * If the Tile at (row, col) is suppose to be a Jump Tile
-     * @param row horizontal location on board
-     * @param col vertical location on board
-     * @return true if it's suppose to be a Jump Tile. false if not
-     */
-    public boolean isJump(int row, int col) {
-        //if there is a River Tile above, below, to right, or to left
-        if (isRiver(row + 1, col) || isRiver(row - 1, col)
-                || isRiver(row, col + 1) || isRiver(row, col - 1)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Used for when Rat is trying to emerge from the River onto a Land Tile.
-     * We only need to check if it is a Jump Tile, and skip checking if it is an Open Tile
-     * @param row horizontal location on board
-     * @param col vertical location on board
-     * @return true if it is a Jump Tile (Land)
-     */
-    public boolean isLand(int row, int col) {
-        return (this.board[row][col] instanceof Jump);
-    }
-
-    /**Make instance of Tile inside the 2d array of Tiles
-     * based off the (row, col) location inside the board.
-     * @param row horizontal location on board
-     * @param col vertical location on board
-     * @return a new instance of it's corresponding Tiles
-     */
-    public Tile makeTile(int row, int col) {
-        if (isDen(row, col)) {
-            return new Den();
-        } else if (isTrap(row, col)) {
-            return new Trap();
-        } else if (isRiver(row, col)) {
-            return new River();
-        } else if (isJump(row, col)) {
-            return new Jump();
-        } else {
-            return new Open();
-        }
-    }
-
-    public Tile makeTile(Location location){
+    //TODO: Tile Factory
+    Tile makeTile(Location location){
         //Den
         if (isRedDen(location)){
-            return new Den("Red");
+            return new Den("red");
         } else if (isBlueDen(location)){
-            return new Den("Blue");
+            return new Den("blue");
         }
 
         //Trap
         else if (isRedTrap(location)){
-            return new Trap("Red");
+            return new Trap("red");
         }
         else if (isBlueTrap(location)){
-            return new Trap("Blue");
+            return new Trap("blue");
         }
 
         //River
@@ -142,79 +75,156 @@ public class Board {
         }
     }
 
-    /**     For crude implementation ONLY
-     * Creates a new 2d array of char to render as the output
-     * then iterates through each char and if there isn't a piece there, retrieve the real board's Tile.
-     * After completing construction, it prints the temp board
-     * @param players the array of two Players that have Pieces on the real board
+    /**
+     * Create a specific type of Piece (Lion, Elephant, etc...) based on location.
+     * @param location the coordinate of the Piece in the context of the board. Used to determine what type of Piece.
+     * @return a specific Piece based on location.
      */
-    public void printBoard(Player[] players) {
-        char[][] draw = new char[HEIGHT][WIDTH];
-
-        for (int row = 0; row < HEIGHT; ++row) {
-            for (int col = 0; col < WIDTH; ++col) {
-                if (draw[row][col] == '\0') {
-                    draw[row][col] = this.board[row][col].getAttribute();
-                }
-            }
+    //TODO: Piece factory
+    private Piece makePiece(Location location){
+        //Lion
+        if (location.equals(new Location(0, 0))){
+            return new Lion("red");
+        } else if (location.equals(new Location(8, 6))){
+            return new Lion("blue");
         }
 
-        for (int row = 0; row < HEIGHT; ++row) {
-            for (int col = 0; col < WIDTH; ++col) {
-                if (col != WIDTH - 1) {
-                    System.out.print(draw[row][col] + " ");
-                } else {
-                    System.out.println(draw[row][col]);
-                }
-            }
+        //Rat
+        else if (location.equals(new Location(2, 0))){
+            return new Rat("red");
+        } else if (location.equals(new Location(6, 6))){
+            return new Rat("blue");
         }
+
+        //Dog
+        else if (location.equals(new Location(1, 1))){
+            return new Dog("red");
+        } else if (location.equals(new Location(7, 5))){
+            return new Dog("blue");
+        }
+
+        //Leopard
+        else if (location.equals(new Location(2, 2))){
+            return new Leopard("red");
+        } else if (location.equals(new Location(6, 4))){
+            return new Leopard("blue");
+        }
+
+        //Wolf
+        else if (location.equals(new Location(2, 4))){
+            return new Wolf("red");
+        } else if (location.equals(new Location(6, 2))){
+            return new Wolf("blue");
+        }
+
+        //Cat
+        else if (location.equals(new Location(1, 5))){
+            return new Cat("red");
+        } else if (location.equals(new Location(7, 1))){
+            return new Cat("blue");
+        }
+
+        //Tiger
+        else if (location.equals(new Location(0, 6))){
+            return new Tiger("red");
+        } else if (location.equals(new Location(8, 0))){
+            return new Tiger("blue");
+        }
+
+        //Elephant
+        else if (location.equals(new Location(2, 6))){
+            return new Elephant("red");
+        } else if (location.equals(new Location(6, 0))){
+            return new Elephant("blue");
+        }
+        return null;
     }
 
     /**
-     *  makeTile(Location) helpers
+     * Moves a piece to a new location, not caring about validation.
+     * @param piece to be moved.
+     * @param location to move piece onto.
+     */
+    public void move(Piece piece, Location location){
+        //Pick up the piece
+        board.get(piece.getLocation()).setPiece(null);
+
+        //Set it down
+        board.get(location).setPiece(piece);
+        piece.setLocation(location);
+    }
+
+    /**
+     *  makeTile(Location) helpers.
      */
     private boolean isRedDen(Location location){
-        if (location.equals(new Location(0, 3))){
-            return true;
-        }
-        return false;
+        return location.equals(new Location(0, 3));
     }
 
     private boolean isBlueDen(Location location){
-        if (location.equals(new Location(8, 3))){
-            return true;
-        }
-        return false;
+        return location.equals(new Location(8, 3));
     }
 
     private boolean isRedTrap(Location location){
-        if (location.equals(new Location(0, 2)) ||
+        return location.equals(new Location(0, 2)) ||
                 location.equals(new Location(0, 4))||
-                location.equals(new Location(1, 3))){
-            return true;
-        }
-        return false;
+                location.equals(new Location(1, 3));
     }
 
     private boolean isBlueTrap(Location location){
-        if (location.equals(new Location(8, 2)) ||
+        return location.equals(new Location(8, 2)) ||
                 location.equals(new Location(8, 4)) ||
-                location.equals(new Location(7, 3))){
-            return true;
-        }
-        return false;
+                location.equals(new Location(7, 3));
     }
 
     private boolean isRiver(Location location){
-        if (location.equals(new Location(3, 1)) || location.equals(new Location(3, 4)) ||
+        return location.equals(new Location(3, 1)) || location.equals(new Location(3, 4)) ||
                 location.equals(new Location(4, 1)) || location.equals(new Location(4, 4)) ||
                 location.equals(new Location(5, 1)) || location.equals(new Location(5, 4)) ||
                 location.equals(new Location(3, 2)) || location.equals(new Location(3, 5)) ||
                 location.equals(new Location(4, 2)) || location.equals(new Location(4, 5)) ||
-                location.equals(new Location(5, 2)) || location.equals(new Location(5, 5))){
-            return true;
+                location.equals(new Location(5, 2)) || location.equals(new Location(5, 5));
+    }
+
+
+    /*** Getters, Setters ***/
+
+    public HashMap<Location, Tile> getBoard() {
+        return board;
+    }
+
+    /**
+     * Returns a tile on the board based on location.
+     * @param location the location in the context of the board.
+     * @return requested tile.
+     */
+    public Tile getTile(Location location) {
+        return board.get(location);
+    }
+
+    //Another way to access getTile(Location).
+    public Tile getTile(int row, int col) {
+        return getTile(new Location(row, col));
+    }
+
+    /**
+     * Retrieve the pieces owned by the _color_ player.
+     * @param color of pieces to look for.
+     * @return the set of pieces which have that color.
+     */
+    ArrayList<Piece> getPieces(String color){
+        ArrayList<Piece> bluePieces = new ArrayList<>();
+        //Look through every tile on the board
+        for (Tile tile : board.values()){
+            //If the tile has a piece on it
+            if (tile.getPiece() != null){
+                //..., and that piece is the right color
+                if (tile.getPiece().getColor().equals(color)){
+                    bluePieces.add(tile.getPiece());
+                }
+            }
         }
-        return false;
+        return bluePieces;
     }
 
 }

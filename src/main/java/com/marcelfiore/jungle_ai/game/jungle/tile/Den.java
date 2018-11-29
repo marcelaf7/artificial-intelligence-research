@@ -1,14 +1,19 @@
-package com.marcelfiore.jungle_ai.game.jungle;
+package com.marcelfiore.jungle_ai.game.jungle.tile;
 
 public class Den extends Tile {
     private String color;
 
+    /**
+     * Create a Den object with a color.
+     * @param color describes which team's den this is: red or blue.
+     */
     public Den(String color) {
         super('D');
         this.color = color;
     }
-    public Den() {
-        super('D');
+
+    public String getColor(){
+        return color;
     }
 
     @Override
