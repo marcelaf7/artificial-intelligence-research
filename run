@@ -1,7 +1,7 @@
 if [ "$1" == "database" ]; then
 	javac src/main/java/com/marcelfiore/jungle_ai/game/ai/QDatabase.java
-	java -cp src/main/java/:src/main/java/mariadb-java-client-2.3.0.jar com.marcelfiore.jungle_ai.game.ai.QDatabase 
+	java -cp src/main/java/:src/main/java/mariadb-java-client-2.3.0.jar com.marcelfiore.jungle_ai.game.ai.QDatabase
 else
-	javac src/main/java/com/marcelfiore/jungle_ai/game/ai/*.java src/main/java/com/marcelfiore/jungle_ai/game/gui/*.java src/main/java/com/marcelfiore/jungle_ai/game/jungle/*.java
+	javac src/main/java/com/marcelfiore/jungle_ai/game/ai/*.java src/main/java/com/marcelfiore/jungle_ai/game/gui/*.java src/main/java/com/marcelfiore/jungle_ai/game/jungle/*.java src/main/java/com/marcelfiore/jungle_ai/game/jungle/*/*.java
 	java -cp src/main/java/:src/main/java/mariadb-java-client-2.3.0.jar com.marcelfiore.jungle_ai.game.gui.GUI
 fi
