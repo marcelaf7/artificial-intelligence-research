@@ -1,7 +1,6 @@
 # Compliled class files
 *.class
 
-
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -11,3 +10,6 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+.classpath
+.project
+.settings/
