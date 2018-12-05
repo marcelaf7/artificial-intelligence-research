@@ -67,6 +67,11 @@ public class GamePage extends Page implements ActionListener {
 
         add(buttonPanel, BorderLayout.CENTER);
 
+        JButton backButton = new JButton("Back to Main Page");
+        backButton.addActionListener(this);
+        backButton.setActionCommand("back");
+        add(backButton);
+
         resetBoard();
         updateBoard();
     }
@@ -198,6 +203,11 @@ public class GamePage extends Page implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getActionCommand().equals("back")) {
+            frame.changePageTo(new MainMenuPage(frame));
+            return;
+        }
+
         GameButton button = (GameButton) actionEvent.getSource();
 
         if (((LineBorder)button.getBorder()).getLineColor().equals(Color.BLACK)) {

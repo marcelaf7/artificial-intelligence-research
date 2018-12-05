@@ -13,7 +13,6 @@ public class GUI extends JFrame {
     }
 
     private void createAndShowGUI() {
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         currentPanel = new MainMenuPage(this);
@@ -29,7 +28,7 @@ public class GUI extends JFrame {
         currentPanel = comp;
         revalidate();
         repaint();
-        //pack();
+        pack();
     }
     public void startGUI(){
         javax.swing.SwingUtilities.invokeLater(() -> createAndShowGUI());
