@@ -227,4 +227,13 @@ public class Board {
         return bluePieces;
     }
 
+    ArrayList<Piece> getPieces() {
+      ArrayList<Piece> redPieces = getPieces("red");
+      ArrayList<Piece> bluePieces = getPieces("blue");
+
+      redPieces.addAll(bluePieces);
+
+      return redPieces;
+    }
+
 }

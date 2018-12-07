@@ -127,7 +127,7 @@ public class Game {
             //..., and the current player owns it.
             if (piece.getColor().equals(players[turn].getColor())) {
                 //Get the valid moves for that piece
-                return piece.getAllValidMoves(board);
+                return piece.getValidMoves(board);
             }
         }
         return new ArrayList<>();
@@ -144,6 +144,25 @@ public class Game {
 
     public Board getBoard() {
         return board;
+    }
+
+    public String[] getAllValidMoves() {
+        ArrayList<Piece> pieces = board.getPieces();
+        ArrayList<String> strings = new ArrayList<String>();
+
+        for (Piece piece : pieces) {
+            ArrayList<Location> validMoves = piece.getValidMoves(board);
+            int currPieceRow = piece.getRow();
+            int currPieceCol = piece.getCol();
+
+            for(Location move : validMoves) {
+                String moveString = "";
+                moveString += currPieceRow + "," + currPieceCol + ";" + move.getRow() + "," + move.getCol();
+                strings.add(moveString);
+            }
+        }
+
+        return strings.toArray(new String[strings.size()]);
     }
 
     /**

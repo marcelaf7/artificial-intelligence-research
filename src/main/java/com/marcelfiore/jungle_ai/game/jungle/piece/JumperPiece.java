@@ -73,7 +73,7 @@ public class JumperPiece extends Piece{
     }
 
     @Override
-    public ArrayList<Location> getAllValidMoves(Board board){
+    public ArrayList<Location> getValidMoves(Board board){
         ArrayList<Location> valid = new ArrayList<>();
         //Look through every location on the board
         for (Location location : board.getBoard().keySet()){

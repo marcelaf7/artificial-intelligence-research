@@ -36,7 +36,7 @@ public class Piece {
      * @param board state of the tiles and pieces.
      * @return the valid moves for this piece.
      */
-    public ArrayList<Location> getAllValidMoves(Board board){
+    public ArrayList<Location> getValidMoves(Board board){
         ArrayList<Location> adjacent = getLocation().getAdjacent();
         ArrayList<Location> valid = new ArrayList<>();
 
