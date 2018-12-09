@@ -16,6 +16,6 @@ public class TrainQPlayer implements Runnable {
   @Override
   public void run() {
     QPlayer ai = new QPlayer();
-    ai.train(numGames, 0.1, 0.1, null);
+    ai.train(numGames, 0.1, 0.1, page);
   }
 }
