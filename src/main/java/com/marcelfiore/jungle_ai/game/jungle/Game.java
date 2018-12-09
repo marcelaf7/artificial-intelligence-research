@@ -165,6 +165,22 @@ public class Game {
         return strings.toArray(new String[strings.size()]);
     }
 
+    public String getState() {
+        ArrayList<Piece> pieces = board.getPieces();
+        String state = "";
+
+        for (int pieceIndex = 0; pieceIndex < pieces.size(); pieceIndex++) {
+            state += pieces.get(pieceIndex).getRow() + "," + pieces.get(pieceIndex).getCol();
+
+            if (pieceIndex < pieces.size() - 1) {
+                state += ";";
+            }
+        }
+
+        return state;
+
+    }
+
     /**
      * Makes it the next player's turn.
      */
