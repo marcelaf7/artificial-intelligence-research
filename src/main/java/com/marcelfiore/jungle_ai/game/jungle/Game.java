@@ -162,7 +162,10 @@ public class Game {
             }
         }
 
-        return strings.toArray(new String[strings.size()]);
+        String[] stringsArray = strings.toArray(new String[strings.size()]);
+
+        System.out.println("First valid move is " + stringsArray[0]);
+        return stringsArray;
     }
 
     public String getState() {

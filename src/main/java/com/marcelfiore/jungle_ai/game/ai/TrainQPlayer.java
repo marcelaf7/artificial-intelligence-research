@@ -2,7 +2,7 @@ package com.marcelfiore.jungle_ai.game.ai;
 
 import com.marcelfiore.jungle_ai.game.gui.AITrainPage;
 
-public class TrainQPlayer implements Runnable {
+public class TrainQPlayer extends Thread {
 
   private AITrainPage page;
   private int numGames;
@@ -10,11 +10,9 @@ public class TrainQPlayer implements Runnable {
   public TrainQPlayer(AITrainPage page, int numGames) {
     this.page = page;
     this.numGames = numGames;
-
   }
 
-  @Override
-  public void run() {
+  public void train() {
     QPlayer ai = new QPlayer();
     ai.train(numGames, 0.1, 0.1, page);
   }

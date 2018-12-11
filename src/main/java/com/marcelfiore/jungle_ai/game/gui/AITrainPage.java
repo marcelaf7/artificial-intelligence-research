@@ -3,11 +3,12 @@ package com.marcelfiore.jungle_ai.game.gui;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import com.marcelfiore.jungle_ai.game.ai.TrainQPlayer;
 
 public class AITrainPage extends Page implements ActionListener {
   private JProgressBar progressBar;
   private boolean cancel = false;
-
+  private int numGames = 1000;
 
   public AITrainPage(GUI frame) {
     super(frame);
@@ -15,7 +16,7 @@ public class AITrainPage extends Page implements ActionListener {
     progressBar.setStringPainted(true);
     progressBar.setMinimum(0);
 
-    progressBar.setMaximum(100); //TODO change this to the number of games for the AI
+    progressBar.setMaximum(numGames);
     progressBar.setValue(0);
     add(progressBar);
 
@@ -29,13 +30,8 @@ public class AITrainPage extends Page implements ActionListener {
     incrementProgress.addActionListener(this);
     add(incrementProgress);
 
-    //TODO run TrainQPlayer
-  }
-
-  public void infiniteLoob() {
-    while (true) {
-      System.out.println("Doing nothing");
-    }
+    TrainQPlayer train = new TrainQPlayer(this, numGames);
+    train.train();
   }
 
   public void incrementProgress() {
